@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
+import { RegisterRequest } from '../models/register.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -20,6 +21,10 @@ export class AuthService {
                     this.isLoggedInSubject.next(true);
                 })
             );
+    }
+
+    register(request: RegisterRequest) {
+        return this.http.post('/api/auth/register', request);
     }
 
     logout() {

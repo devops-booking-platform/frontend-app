@@ -1,0 +1,44 @@
+<div class="container mt-5" style="max-width: 500px;">
+    <h3 class="mb-3">Sign Up</h3>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <input class="form-control mb-2" placeholder="Username" formControlName="username" />
+        <div class="text-danger" *ngIf="form.controls.username.touched && form.controls.username.invalid">
+            Username must be {{form.controls.username.errors?.['minlength'] ? 'longer' : ''}}
+        </div>
+
+        <input class="form-control mb-2" placeholder="Email" formControlName="email" />
+        <div class="text-danger" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+            Valid email is required
+        </div>
+
+        <div class="mb-2">
+            <div class="input-group">
+                <input class="form-control" placeholder="Password" [type]="showPassword ? 'text' : 'password'"
+                    formControlName="password" />
+
+                <button type="button" class="btn btn-outline-secondary" (click)="showPassword = !showPassword">
+                    <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+            </div>
+
+            <div class="text-danger" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+                Password must be at least {{minPassowrdLength}} characters
+            </div>
+        </div>
+
+        <input class="form-control mb-2" placeholder="First Name" formControlName="firstName" />
+        <input class="form-control mb-2" placeholder="Last Name" formControlName="lastName" />
+        <input class="form-control mb-2" placeholder="Address" formControlName="address" />
+
+        <select class="form-select mb-3" formControlName="role">
+            <option [ngValue]="roles.Guest">Guest</option>
+            <option [ngValue]="roles.Host">Host</option>
+        </select>
+
+        <button class="btn btn-success w-100" [disabled]="form.invalid">
+            Register
+        </button>
+    </form>
+</div>
