@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
-import { RegisterRequest } from '../models/register.model';
+import { RegisterRequest } from '../../shared/models/register.model';
+import { ApiConfig } from '../../core/api.config';
+import { LoginRequest } from '../../shared/models/login.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,12 +11,13 @@ export class AuthService {
     private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
 
     isLoggedIn$ = this.isLoggedInSubject.asObservable();
-
+    private readonly baseUrl = ApiConfig.userService;
     constructor(private http: HttpClient) { }
 
     login(username: string, password: string) {
+        const request: LoginRequest = { username, password };
         return this.http
-            .post<{ token: string }>('/api/auth/login', { username, password })
+            .post<{ token: string }>(`${this.baseUrl}/auth/login`, request)
             .pipe(
                 tap(res => {
                     localStorage.setItem(this.TOKEN_KEY, res.token);
@@ -24,7 +27,7 @@ export class AuthService {
     }
 
     register(request: RegisterRequest) {
-        return this.http.post('/api/auth/register', request);
+        return this.http.post(`${this.baseUrl}/auth/register`, request);
     }
 
     logout() {

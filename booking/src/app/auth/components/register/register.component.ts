@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserRole, RegisterRequest } from '../../models/register.model';
 import { AuthService } from '../../services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ValidationConstants } from '../../models/validation-constraints.model';
+import { UserRole, RegisterRequest } from '../../../shared/models/register.model';
+import { ValidationConstants } from '../../../shared/models/validation-constraints.model';
 
 @Component({
   selector: 'app-register',
