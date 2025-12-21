@@ -4,6 +4,8 @@ import { AuthService } from '../../services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserRole, RegisterRequest } from '../../../shared/models/register.model';
 import { ValidationConstants } from '../../../shared/models/validation-constraints.model';
+import { SnackbarNotificationService } from '../../services/snackbar-notification.service';
+import { tap, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -51,7 +53,8 @@ export class RegisterComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: SnackbarNotificationService
   ) { }
 
   submit(): void {
@@ -69,14 +72,18 @@ export class RegisterComponent {
       address: this.form.controls.address.value!,
       role: this.form.controls.role.value!
     };
-    this.authService.register(request).subscribe({
-      next: () => {
-        alert('Registration successful. Please log in.');
-        this.router.navigate(['/login']);
-      },
-      error: err => {
-        alert(err.error?.message ?? 'Registration failed');
-      }
-    });
+
+    this.authService.register(request)
+      .pipe(
+        tap(() => {
+          this.notificationService.success('Registration successful! Please log in.');
+          this.router.navigate(['/login']);
+        }),
+        catchError(err => {
+          const message = err.error?.detail || 'Registration failed';
+          this.notificationService.error(message);
+          return of(null);
+        }))
+      .subscribe();
   }
 }

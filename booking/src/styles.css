@@ -1,1 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+.my-custom-snackbar {
+  margin: 0 !important;
+  position: absolute;
+  right: 25px;
+  top: 60px;
+}

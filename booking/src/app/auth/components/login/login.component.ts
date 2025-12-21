@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { tap, catchError, of } from 'rxjs';
+import { SnackbarNotificationService } from '../../services/snackbar-notification.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +19,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: SnackbarNotificationService
   ) { }
 
   submit(): void {
@@ -26,13 +29,18 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login(
-      this.form.value.username!,
-      this.form.value.password!
-    ).subscribe({
-      next: () => this.router.navigate(['/accommodations']),
-      error: () => alert('Invalid username or password')
-    });
+    this.authService.login(this.form.value.username!, this.form.value.password!)
+      .pipe(
+        tap(() => {
+          this.notificationService.success('Login successful!');
+          this.router.navigate(['/accommodations']);
+        }),
+        catchError((error) => {
+          const message = error?.error?.detail || 'Invalid username or password';
+          this.notificationService.error(message);
+          return of(null);
+        }))
+      .subscribe();
   }
 }
 
