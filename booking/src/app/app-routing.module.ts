@@ -17,6 +17,13 @@ const routes: Routes = [
         .then(m => m.ReservationsModule)
   },
   {
+    path: 'users',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/users/users.module')
+        .then(m => m.UsersModule)
+  },
+  {
     path: 'profile',
     canActivate: [AuthGuard],
     loadChildren: () =>
