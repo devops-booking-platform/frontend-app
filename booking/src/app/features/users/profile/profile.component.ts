@@ -5,6 +5,8 @@ import { SnackbarNotificationService } from '../../../auth/services/snackbar-not
 import { UserService } from '../../../core/services/user.service';
 import { UpdateProfileRequestDTO } from '../../../shared/models/user-service.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../auth/services/auth.service';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-profile',
@@ -22,7 +24,8 @@ export class ProfileComponent {
 
   constructor(
     private userService: UserService,
-    private notification: SnackbarNotificationService,
+    private authService: AuthService,
+    private notificationService: SnackbarNotificationService,
     private router: Router
   ) { }
 
@@ -39,9 +42,9 @@ export class ProfileComponent {
 
     this.userService.updateProfile(this.form.value as UpdateProfileRequestDTO)
       .pipe(
-        tap(() => this.notification.success('Profile updated successfully')),
+        tap(() => this.notificationService.success('Profile updated successfully')),
         catchError(err => {
-          this.notification.error(err.error?.detail ?? 'Update failed');
+          this.notificationService.error(err.error?.detail ?? 'Update failed');
           return of(null);
         }))
       .subscribe();
@@ -49,5 +52,26 @@ export class ProfileComponent {
 
   goToChangePassword(): void {
     this.router.navigate(['/users/password']);
+  }
+
+  confirmDeleteAccount(): void {
+    const modalEl = document.getElementById('deleteAccountModal');
+    const modal = modalEl ? Modal.getOrCreateInstance(modalEl)
+      : null;
+
+    this.userService.deleteAccount().subscribe({
+      next: () => {
+        modal?.hide();
+        this.notificationService.success('Account successfully deleted');
+        this.authService.logout();
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        modal?.hide();
+        this.notificationService.error(
+          err?.error?.message ?? 'Account cannot be deleted'
+        );
+      }
+    });
   }
 }
