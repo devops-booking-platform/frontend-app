@@ -69,7 +69,7 @@ export class ProfileComponent {
       error: (err) => {
         modal?.hide();
         this.notificationService.error(
-          err?.error?.message ?? 'Account cannot be deleted'
+          err.error?.detail ?? 'Account cannot be deleted'
         );
       }
     });
