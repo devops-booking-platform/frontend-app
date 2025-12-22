@@ -1,15 +1,15 @@
-<div class="card shadow-sm mt-4">
+<div class="card shadow-sm rounded-4 mt-4">
     <div class="card-body">
-        <h5 class="mb-3">Notification Configuration</h5>
+        <h5 class="mb-4 text-primary">Notification Settings</h5>
 
         <div class="list-group">
-            <div class="list-group-item d-flex justify-content-between align-items-center"
-                *ngFor="let n of notificationSettings">
+            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center rounded-3 mb-2"
+                *ngFor="let n of notificationSettings"
+                [ngClass]="{ 'list-group-item-light': n.enabled, 'list-group-item-secondary': !n.enabled }"
+                style="transition: background-color 0.2s ease; cursor: pointer;">
                 <div>
                     <strong>{{ n.label }}</strong>
-                    <div class="text-muted small">
-                        {{ n.description }}
-                    </div>
+                    <div class="text-muted small">{{ n.description }}</div>
                 </div>
 
                 <div class="form-check form-switch">
