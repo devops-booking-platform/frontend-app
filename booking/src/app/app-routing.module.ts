@@ -30,6 +30,13 @@ const routes: Routes = [
       import('./features/users/users.module')
         .then(m => m.UsersModule)
   },
+  {
+    path: 'notifications',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/notifications/notifications.module')
+        .then(m => m.NotificationsModule)
+  },
   { path: '', redirectTo: 'accommodations', pathMatch: 'full' }
 ];
 

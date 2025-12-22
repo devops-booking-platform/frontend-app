@@ -1,0 +1,22 @@
+<div class="card shadow-sm mt-4">
+    <div class="card-body">
+        <h5 class="mb-3">Notification Configuration</h5>
+
+        <div class="list-group">
+            <div class="list-group-item d-flex justify-content-between align-items-center"
+                *ngFor="let n of notificationSettings">
+                <div>
+                    <strong>{{ n.label }}</strong>
+                    <div class="text-muted small">
+                        {{ n.description }}
+                    </div>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" [checked]="n.enabled"
+                        (change)="toggleNotification(n)" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

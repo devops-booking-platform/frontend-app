@@ -8,11 +8,11 @@ export interface EnableDisableNotificationRequest {
 }
 
 export enum NotificationType {
-    ReservationCreated = 'ReservationCreated',
-    ReservationCanceled = 'ReservationCanceled',
-    ReservationResponded = 'ReservationResponded',
-    HostRated = 'HostRated',
-    AccommodationRated = 'AccommodationRated'
+    ReservationCreated = 0,
+    ReservationCanceled,
+    ReservationResponded,
+    HostRated,
+    AccommodationRated
 }
 
 export interface Notification {
