@@ -11,7 +11,7 @@ export interface SearchResult {
     name: string;
     city: string;
     country: string;
-    pricePerNight: number;
+    totalPrice: number;
     maxGuests: number;
     imageUrl?: string;
 }

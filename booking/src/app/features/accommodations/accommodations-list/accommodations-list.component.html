@@ -78,9 +78,9 @@
                                 </span>
                             </th>
 
-                            <th (click)="sort('pricePerNight')" role="button">
-                                Price per Night
-                                <span *ngIf="sortColumn === 'pricePerNight'">
+                            <th (click)="sort('totalPrice')" role="button">
+                                Total price
+                                <span *ngIf="sortColumn === 'totalPrice'">
                                     <i
                                         [ngClass]="sortDirection === 'asc' ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
                                 </span>
@@ -102,7 +102,7 @@
                             <td>{{ r.name }}</td>
                             <td>{{ r.country }}</td>
                             <td>{{ r.city }}</td>
-                            <td>{{ r.pricePerNight }} €</td>
+                            <td>{{ r.totalPrice }} €</td>
                             <td>{{ r.maxGuests }}</td>
                         </tr>
                     </tbody>

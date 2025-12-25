@@ -22,6 +22,14 @@ export interface AccommodationRequest {
     amenities?: string[] | null;
 }
 
+export interface GetAccommodationsRequest {
+    id: string;
+    name: string;
+    address: string;
+    minGuests: number;
+    maxGuests: number;
+}
+
 export interface AccommodationReservationInfoResponseDTO {
     hostId: string;
     name?: string | null;
