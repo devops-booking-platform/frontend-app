@@ -3,5 +3,6 @@ export const ApiConfig = {
     accommodationService: 'http://localhost:5002/api',
     ratingService: 'http://localhost:5003/api',
     reservationService: 'http://localhost:5004/api',
-    notificationService: 'http://localhost:5006/api'
+    notificationService: 'http://localhost:5006/api',
+    searchService: 'http://localhost:5005/api'
 };
