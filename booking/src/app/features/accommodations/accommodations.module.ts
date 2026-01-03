@@ -6,12 +6,14 @@ import { AccommodationsListComponent } from './accommodations-list/accommodation
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { MyAccommodationsComponent } from './my-accommodations/my-accommodations.component';
+import { AccommodationEditComponent } from './accommodation-edit/accommodation-edit.component';
 
 
 @NgModule({
   declarations: [
     AccommodationsListComponent,
-    MyAccommodationsComponent
+    MyAccommodationsComponent,
+    AccommodationEditComponent
   ],
   imports: [
     CommonModule,

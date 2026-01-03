@@ -41,4 +41,8 @@ export class MyAccommodationsComponent implements OnInit {
   navigateToCreate(): void {
     this.router.navigate(['/accommodations/new']);
   }
+
+  navigateToDetails(id: string): void {
+    this.router.navigate([`/accommodations/edit/${id}`]);
+  }
 }
