@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SearchRequest, SearchResult } from '../../../shared/models/search.model';
 import { SearchService } from '../../../core/services/search.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { tap, catchError, of } from 'rxjs';
+import { tap, catchError } from 'rxjs';
 import { SnackbarNotificationService } from '../../../auth/services/snackbar-notification.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { SnackbarNotificationService } from '../../../auth/services/snackbar-not
   styleUrl: './accommodations-list.component.css'
 })
 export class AccommodationsListComponent {
-
+  Math = Math;
   form = new FormGroup({
     city: new FormControl<string | null>(null),
     country: new FormControl<string | null>(null),
@@ -23,44 +23,57 @@ export class AccommodationsListComponent {
   results: SearchResult[] = [];
   searched = false;
 
+  // Pagination
+  page = 1;
+  pageSize = 10;
+  totalCount = 0;
+
+  // Sorting
   sortColumn: keyof SearchResult | '' = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private searchService: SearchService,
+  constructor(
+    private searchService: SearchService,
     private snackbar: SnackbarNotificationService
   ) { }
 
-  search(): void {
+  search(page: number = 1): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    const request = { ...this.form.value } as SearchRequest;
+    this.page = page;
 
-    request.start = new Date(request.start!).toISOString();
-    request.end = new Date(request.end!).toISOString();
+    const request = {
+      ...this.form.value,
+      page: this.page,
+      pageSize: this.pageSize
+    } as SearchRequest;
+
+    request.start = this.toDateOnlyString(request.start!);
+    request.end = this.toDateOnlyString(request.end!);
 
     this.searchService.search(request)
       .pipe(
-        tap(() => {
-          this.searched = true;
-        }),
+        tap(() => (this.searched = true)),
         catchError(err => {
-          this.snackbar.error(
-            err?.error?.detail || 'Search failed. Please try again.'
-          );
+          this.snackbar.error(err?.error?.detail || 'Search failed.');
           this.results = [];
+          this.totalCount = 0;
           this.searched = true;
-          return of([]);
+          throw err;
         })
       )
       .subscribe(res => {
-        this.results = res;
+        this.results = res.items;
+        this.totalCount = res.totalCount;
+        this.page = res.page;
+        this.pageSize = res.pageSize;
       });
   }
 
-
+  // Sorting triggers new search
   sort(column: keyof SearchResult): void {
     if (this.sortColumn === column) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -69,16 +82,17 @@ export class AccommodationsListComponent {
       this.sortDirection = 'asc';
     }
 
-    this.results = [...this.results].sort((a, b) => {
-      const x = a[column];
-      const y = b[column];
+    // After setting sorting, reload page 1
+    this.search(1);
+  }
 
-      if (x == null || y == null) return 0;
+  // Pagination click
+  onPageChange(page: number): void {
+    this.search(page);
+  }
 
-      return this.sortDirection === 'asc'
-        ? x > y ? 1 : -1
-        : x < y ? 1 : -1;
-    });
+  private toDateOnlyString(value: string): string {
+    return new Date(value).toISOString().split('T')[0];
   }
 
 }

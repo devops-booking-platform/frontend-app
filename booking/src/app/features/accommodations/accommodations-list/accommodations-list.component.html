@@ -45,7 +45,6 @@
         </div>
     </div>
 
-    <!-- Results -->
     <div class="card shadow-sm" *ngIf="results.length > 0">
         <div class="card-body">
 
@@ -62,6 +61,7 @@
                                         [ngClass]="sortDirection === 'asc' ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
                                 </span>
                             </th>
+
                             <th (click)="sort('country')" role="button">
                                 Country
                                 <span *ngIf="sortColumn === 'country'">
@@ -79,7 +79,7 @@
                             </th>
 
                             <th (click)="sort('totalPrice')" role="button">
-                                Total price
+                                Total Price
                                 <span *ngIf="sortColumn === 'totalPrice'">
                                     <i
                                         [ngClass]="sortDirection === 'asc' ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
@@ -93,7 +93,6 @@
                                         [ngClass]="sortDirection === 'asc' ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
                                 </span>
                             </th>
-
                         </tr>
                     </thead>
 
@@ -109,6 +108,27 @@
 
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <nav class="mt-3">
+                <ul class="pagination justify-content-center">
+
+                    <li class="page-item" [class.disabled]="page === 1">
+                        <button class="page-link" (click)="onPageChange(page - 1)">Previous</button>
+                    </li>
+
+                    <li class="page-item"
+                        *ngFor="let p of [].constructor(Math.ceil(totalCount / pageSize)); let i = index"
+                        [class.active]="page === i + 1">
+                        <button class="page-link" (click)="onPageChange(i + 1)">{{ i + 1 }}</button>
+                    </li>
+
+                    <li class="page-item" [class.disabled]="page >= totalCount / pageSize">
+                        <button class="page-link" (click)="onPageChange(page + 1)">Next</button>
+                    </li>
+
+                </ul>
+            </nav>
 
         </div>
     </div>
