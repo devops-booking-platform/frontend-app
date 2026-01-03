@@ -23,6 +23,11 @@ export class ReservationService {
         return this.http.get<ReservationResponse[]>(`${this.baseUrl}/reservations/approved`);
     }
 
+     // Get pending reservations
+    getPendingReservations(): Observable<ReservationResponse[]> {
+        return this.http.get<ReservationResponse[]>(`${this.baseUrl}/reservations/pending`);
+    }
+
     // Cancel reservation
     cancelReservation(reservationId: string): Observable<void> {
         return this.http.patch<void>(`${this.baseUrl}/reservations/${reservationId}/cancel`, null);
