@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiConfig } from '../api.config';
-import { AccommodationRequest, AccommodationReservationInfoResponseDTO, AvailabilityRequest, GetAccommodationsRequest } from '../../shared/models/accommodation.model';
+import { AccommodationRequest, AccommodationReservationInfoResponseDTO, AvailabilityRequest, GetAccommodationResponse, GetAccommodationsRequest, GetAmenitiesResponse } from '../../shared/models/accommodation.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccommodationService {
@@ -42,5 +42,13 @@ export class AccommodationService {
 
     healthCheck(): Observable<string> {
         return this.http.get(`${this.baseUrl}/health`, { responseType: 'text' });
+    }
+
+    getAmenities(): Observable<GetAmenitiesResponse[]> {
+        return this.http.get<GetAmenitiesResponse[]>(`${this.baseUrl}/accommodations/amenities`);
+    }
+
+    getAccommodation(id: string): Observable<GetAccommodationResponse> {
+        return this.http.get<GetAccommodationResponse>(`${this.baseUrl}/accommodations/${id}`);
     }
 }

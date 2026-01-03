@@ -45,3 +45,54 @@ export interface AvailabilityRequest {
     endDate: string;   // ISO string
     accommodationId: string;
 }
+
+export interface GetAmenitiesResponse {
+    id: string;
+    name: string;
+    description: string;
+}
+
+export interface GetAccommodationResponse {
+    id: string;
+
+    name: string;
+
+    description?: string | null;
+
+    isAutoConfirm: boolean;
+
+    minimumNumberOfGuests: number;
+
+    maximumNumberOfGuests: number;
+
+    priceType: PriceType;
+
+    location: LocationResponseDto;
+
+    photos: string[];
+
+    amenities: AmenityResponseDto[];
+
+    availabilities: AvailabilityResponseDto[];
+}
+
+export interface LocationResponseDto {
+    id: string;
+    country?: string | null;
+    city?: string | null;
+    address?: string | null;
+    postalCode?: string | null;
+}
+
+export interface AmenityResponseDto {
+    id: string;
+    name: string;
+    description: string;
+}
+
+export interface AvailabilityResponseDto {
+    id: string;
+    price: number;
+    startDate: string; // DateOnly → string in JSON
+    endDate: string;   // DateOnly → string in JSON
+}

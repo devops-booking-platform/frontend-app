@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccommodationService } from '../../../core/services/accommodation.service';
-import { PriceType, AccommodationRequest } from '../../../shared/models/accommodation.model';
+import { PriceType, AccommodationRequest, GetAmenitiesResponse } from '../../../shared/models/accommodation.model';
 import { ActivatedRoute } from '@angular/router';
+import { map, filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-accommodation-edit',
@@ -12,25 +13,31 @@ import { ActivatedRoute } from '@angular/router';
 export class AccommodationEditComponent implements OnInit {
 
   form: FormGroup;
+  amenities: GetAmenitiesResponse[] = [];
+
+  id = '';
+
   priceTypes = [
     { value: PriceType.PerNight, label: 'Per Night' },
     { value: PriceType.PerPerson, label: 'Per Person' }
   ];
-  id = '';
 
   constructor(
     private fb: FormBuilder,
     private accommodationService: AccommodationService,
     private route: ActivatedRoute
   ) {
+
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]],
+
       minimumNumberOfGuests: [1, [Validators.required, Validators.min(1)]],
       maximumNumberOfGuests: [1, [Validators.required, Validators.min(1)]],
+
       priceType: [PriceType.PerNight, Validators.required],
 
-      photos: [[]],
+      photos: this.fb.control<string[]>([]),
       amenities: [[]],
 
       location: this.fb.group({
@@ -45,34 +52,68 @@ export class AccommodationEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap
-      .subscribe(params => this.id = params.get('id') ?? '');
-  }
+    // Load amenities first
+    this.accommodationService.getAmenities()
+      .subscribe(amenities => this.amenities = amenities);
 
-  get f() {
-    return this.form.controls;
+    // Load accommodation ONLY if id exists
+    this.route.paramMap.pipe(
+      map(params => params.get('id')),
+      filter((id): id is string => !!id),
+      switchMap(id => this.accommodationService.getAccommodation(id))
+    ).subscribe(accommodation => {
+
+      this.id = accommodation.id;
+
+      // Convert backend fields to patch value shape
+      this.form.patchValue({
+        name: accommodation.name,
+        description: accommodation.description,
+        minimumNumberOfGuests: accommodation.minimumNumberOfGuests,
+        maximumNumberOfGuests: accommodation.maximumNumberOfGuests,
+        priceType: accommodation.priceType,
+        isAutoConfirm: accommodation.isAutoConfirm,
+        location: accommodation.location,
+        photos: accommodation.photos,
+        amenities: accommodation.amenities.map(a => a.id) // extract IDs
+      });
+    });
   }
 
   submit() {
+    console.log('aloo');
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
+    console.log('aloo');
+
     const request: AccommodationRequest = this.form.value;
 
-    this.accommodationService.createAccommodation(request).subscribe({
-      next: () => {
-        this.form.reset({
-          minimumNumberOfGuests: 1,
-          maximumNumberOfGuests: 1,
-          priceType: PriceType.PerNight,
-          isAutoConfirm: false
+    if (!this.id) {
+      // CREATE
+      this.accommodationService.createAccommodation(request)
+        .subscribe(() => {
+          this.form.reset({
+            minimumNumberOfGuests: 1,
+            maximumNumberOfGuests: 1,
+            priceType: PriceType.PerNight,
+            isAutoConfirm: false
+          });
         });
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+    } else {
+      console.warn("TODO: Update endpoint not implemented yet", request);
+    }
+  }
+
+  onPhotosChange(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    const photos = value
+      .split(',')
+      .map(p => p.trim())
+      .filter(p => p.length > 0);
+
+    this.form.controls['photos'].setValue(photos);
   }
 }
