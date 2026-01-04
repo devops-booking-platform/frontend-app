@@ -53,9 +53,6 @@ export class NotificationConfigurationComponent implements OnInit {
   }
 
   toggleNotification(setting: NotificationSettingView): void {
-    console.log(this.disabled.find(d => d.notificationType === setting.type));
-    console.log(this.disabled);
-    console.log(setting);
     const request = {
       notificationType: setting.type,
       id: !setting.enabled
