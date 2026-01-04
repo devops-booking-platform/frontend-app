@@ -18,9 +18,7 @@ export class NotificationListenerService {
         this.signalR.notification$
             .subscribe(n => {
                 if (!n) return;
-
                 this.snackbar.notification(n.message);
-                console.log("GLOBAL notification:", n);
             });
     }
 }
