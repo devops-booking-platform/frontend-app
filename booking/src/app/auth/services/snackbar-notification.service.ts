@@ -17,6 +17,15 @@ export class SnackbarNotificationService {
         });
     }
 
+    notification(message: string, duration: number = 6000) {
+        this.snackBar.open(message, 'Close', {
+            duration,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['my-custom-snackbar']
+        });
+    }
+
     error(message: string, duration: number = 3000) {
         this.snackBar.open(message, 'Close', {
             duration,
