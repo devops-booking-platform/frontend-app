@@ -16,8 +16,8 @@ export class AccommodationsListComponent {
     city: new FormControl<string | null>(null),
     country: new FormControl<string | null>(null),
     guests: new FormControl(1, Validators.required),
-    start: new FormControl('', Validators.required),
-    end: new FormControl('', Validators.required),
+    start: new FormControl(this.plusDays(1), Validators.required),
+    end: new FormControl(this.plusDays(7), Validators.required),
   });
 
   results: SearchResult[] = [];
@@ -36,6 +36,12 @@ export class AccommodationsListComponent {
     private searchService: SearchService,
     private snackbar: SnackbarNotificationService
   ) { }
+
+  private plusDays(days: number): string {
+    const d = new Date();
+    d.setDate(d.getDate() + days + 1);
+    return d.toISOString().split('T')[0];
+  }
 
   search(page: number = 1): void {
     if (this.form.invalid) {

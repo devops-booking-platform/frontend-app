@@ -18,8 +18,8 @@ export class AccommodationEditComponent implements OnInit {
   id = '';
 
   priceTypes = [
-    { value: PriceType.PerNight, label: 'Per Night' },
-    { value: PriceType.PerPerson, label: 'Per Person' }
+    { value: PriceType.PerGuest, label: 'Per Guest' },
+    { value: PriceType.PerUnit, label: 'Per Unit' }
   ];
 
   constructor(
@@ -30,14 +30,14 @@ export class AccommodationEditComponent implements OnInit {
   ) {
 
     this.form = this.fb.group({
-      id: [''],
+      id: [null],
       name: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]],
 
       minimumNumberOfGuests: [1, [Validators.required, Validators.min(1)]],
       maximumNumberOfGuests: [1, [Validators.required, Validators.min(1)]],
 
-      priceType: [PriceType.PerNight, Validators.required],
+      priceType: [PriceType.PerGuest, Validators.required],
 
       photos: this.fb.control<string[]>([]),
       amenities: [[]],
@@ -92,7 +92,6 @@ export class AccommodationEditComponent implements OnInit {
     const request: AccommodationRequest = this.form.value;
 
     if (!this.id) {
-      // CREATE
       this.accommodationService.createAccommodation(request)
         .subscribe(() => this.router.navigate(['/accommodations/my']));
     } else {

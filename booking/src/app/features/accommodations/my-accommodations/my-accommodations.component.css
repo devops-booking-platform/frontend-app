@@ -1,6 +1,7 @@
 .accommodation-card {
     border-radius: 12px;
     transition: transform 0.15s ease;
+    cursor: pointer;
 
     &:hover {
         transform: translateY(-4px);

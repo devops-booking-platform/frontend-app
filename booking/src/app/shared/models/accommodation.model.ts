@@ -1,6 +1,6 @@
 export enum PriceType {
-    PerNight = 0,
-    PerPerson = 1
+    PerGuest = 0,
+    PerUnit = 1
 }
 
 export interface LocationRequest {
