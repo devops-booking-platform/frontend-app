@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccommodationService } from '../../../core/services/accommodation.service';
 import { PriceType, AccommodationRequest, GetAmenitiesResponse } from '../../../shared/models/accommodation.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, filter, switchMap } from 'rxjs';
 
 @Component({
@@ -25,10 +25,12 @@ export class AccommodationEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private accommodationService: AccommodationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
 
     this.form = this.fb.group({
+      id: [''],
       name: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]],
 
@@ -67,6 +69,7 @@ export class AccommodationEditComponent implements OnInit {
 
       // Convert backend fields to patch value shape
       this.form.patchValue({
+        id: accommodation.id,
         name: accommodation.name,
         description: accommodation.description,
         minimumNumberOfGuests: accommodation.minimumNumberOfGuests,
@@ -81,29 +84,20 @@ export class AccommodationEditComponent implements OnInit {
   }
 
   submit() {
-    console.log('aloo');
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
-    console.log('aloo');
 
     const request: AccommodationRequest = this.form.value;
 
     if (!this.id) {
       // CREATE
       this.accommodationService.createAccommodation(request)
-        .subscribe(() => {
-          this.form.reset({
-            minimumNumberOfGuests: 1,
-            maximumNumberOfGuests: 1,
-            priceType: PriceType.PerNight,
-            isAutoConfirm: false
-          });
-        });
+        .subscribe(() => this.router.navigate(['/accommodations/my']));
     } else {
-      console.warn("TODO: Update endpoint not implemented yet", request);
+      this.accommodationService.updateAccommodation(request)
+        .subscribe(() => this.router.navigate(['/accommodations/my']));
     }
   }
 

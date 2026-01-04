@@ -11,6 +11,7 @@ export interface LocationRequest {
 }
 
 export interface AccommodationRequest {
+    id?: string;
     name: string;
     location?: LocationRequest;
     minimumNumberOfGuests?: number;

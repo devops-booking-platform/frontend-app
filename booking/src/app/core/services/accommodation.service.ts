@@ -15,6 +15,10 @@ export class AccommodationService {
         return this.http.post<void>(`${this.baseUrl}/accommodations`, request);
     }
 
+     updateAccommodation(request: AccommodationRequest): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/accommodations`, request);
+    }
+
     getReservationInfo(
         id: string,
         start?: string,
