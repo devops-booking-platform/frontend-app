@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AccommodationService } from '../../../core/services/accommodation.service';
-import { PriceType, AccommodationRequest, GetAmenitiesResponse } from '../../../shared/models/accommodation.model';
+import { PriceType, AccommodationRequest, GetAmenitiesResponse, AvailabilityRequest } from '../../../shared/models/accommodation.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, filter, switchMap } from 'rxjs';
 import { ApiConfig } from '../../../core/api.config';
+import { SnackbarNotificationService } from '../../../auth/services/snackbar-notification.service';
 
 @Component({
   selector: 'app-accommodation-edit',
@@ -14,8 +15,10 @@ import { ApiConfig } from '../../../core/api.config';
 export class AccommodationEditComponent implements OnInit {
 
   form: FormGroup;
+  availabilityForm: FormGroup;
   amenities: GetAmenitiesResponse[] = [];
-
+  availabilities: AvailabilityRequest[] = [];
+  editingAvailabilityId?: string;
   id = '';
 
   priceTypes = [
@@ -27,6 +30,7 @@ export class AccommodationEditComponent implements OnInit {
     private fb: FormBuilder,
     private accommodationService: AccommodationService,
     private route: ActivatedRoute,
+    private notificationService: SnackbarNotificationService,
     private router: Router
   ) {
 
@@ -52,6 +56,12 @@ export class AccommodationEditComponent implements OnInit {
 
       isAutoConfirm: [false]
     });
+
+    this.availabilityForm = this.fb.group({
+      price: [0, [Validators.required, Validators.min(0)]],
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
@@ -67,7 +77,13 @@ export class AccommodationEditComponent implements OnInit {
     ).subscribe(accommodation => {
 
       this.id = accommodation.id;
-
+      this.availabilities = accommodation.availabilities.map(a => ({
+        id: a.id,
+        price: a.price,
+        startDate: a.startDate,
+        endDate: a.endDate,
+        accommodationId: accommodation.id
+      }));
       // Convert backend fields to patch value shape
       this.form.patchValue({
         id: accommodation.id,
@@ -137,5 +153,52 @@ export class AccommodationEditComponent implements OnInit {
     })
       .then(res => res.json())
       .then(data => data.secure_url as string);
+  }
+
+  addAvailability() {
+    if (this.availabilityForm.invalid) {
+      this.availabilityForm.markAllAsTouched();
+      return;
+    }
+
+    const availability: AvailabilityRequest = {
+      ...this.availabilityForm.value,
+      accommodationId: this.id
+    };
+    if (this.editingAvailabilityId) {
+      availability.id = this.editingAvailabilityId;
+    }
+
+    this.accommodationService.createOrUpdateAvailability(availability)
+      .subscribe({
+        next: () => {
+          this.accommodationService.getAccommodation(this.id)
+            .subscribe(accommodation => {
+              this.availabilities = accommodation.availabilities.map(a => ({
+                id: a.id,
+                price: a.price,
+                startDate: a.startDate,
+                endDate: a.endDate,
+                accommodationId: accommodation.id
+              }));
+              // Reset form
+              this.availabilityForm.reset({ price: 0, startDate: '', endDate: '' });
+              this.editingAvailabilityId = null;
+            });
+        },
+        error: (err) => {
+          const message = err?.error?.detail || 'Something went wrong while saving availability';
+          this.notificationService.error(message);
+        }
+      });
+  }
+
+  editAvailability(a: AvailabilityRequest) {
+    this.editingAvailabilityId = a.id!;
+    this.availabilityForm.patchValue({
+      price: a.price,
+      startDate: a.startDate,
+      endDate: a.endDate
+    });
   }
 }

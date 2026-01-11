@@ -40,7 +40,7 @@ export class AccommodationService {
         return this.http.get<GetAccommodationsRequest[]>(`${this.baseUrl}/accommodations/my`);
     }
 
-    checkAvailability(request: AvailabilityRequest): Observable<void> {
+    createOrUpdateAvailability(request: AvailabilityRequest): Observable<void> {
         return this.http.post<void>(`${this.baseUrl}/availability`, request);
     }
 
