@@ -85,8 +85,19 @@
 
                 <!-- PHOTOS -->
                 <h5 class="mb-3">Photos</h5>
-                <input type="text" class="form-control" [value]="form.controls['photos'].value?.join(', ')"
-                    (input)="onPhotosChange($event)" placeholder="https://img1.jpg, https://img2.jpg">
+                <input type="file" accept="image/*" multiple (change)="onFileSelected($event)">
+                <div class="d-flex flex-wrap align-items-start mt-2">
+                    <div *ngFor="let url of form.controls['photos'].value; let i = index"
+                        class="position-relative me-2 mb-2">
+                        <img [src]="url" width="100" height="auto" class="border rounded" />
+
+                        <!-- X button -->
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                            style="padding: 0 4px;" (click)="removePhoto(i)">
+                            &times;
+                        </button>
+                    </div>
+                </div>
 
                 <hr class="my-2">
                 <h5 class="mb-3">Amenities</h5>

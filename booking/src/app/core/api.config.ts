@@ -5,5 +5,7 @@ export const ApiConfig = {
     reservationService: 'http://localhost:5004/api',
     notificationService: 'http://localhost:5006/api',
     notificationServiceHub: 'http://localhost:5006/notificationHub',
-    searchService: 'http://localhost:5005/api'
+    searchService: 'http://localhost:5005/api',
+    cloudinaryCloudName: 'du4qudomo',
+    cloudinaryUploadPresetName: 'booking-platform'
 };

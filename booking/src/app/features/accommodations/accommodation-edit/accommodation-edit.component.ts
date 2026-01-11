@@ -4,6 +4,7 @@ import { AccommodationService } from '../../../core/services/accommodation.servi
 import { PriceType, AccommodationRequest, GetAmenitiesResponse } from '../../../shared/models/accommodation.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, filter, switchMap } from 'rxjs';
+import { ApiConfig } from '../../../core/api.config';
 
 @Component({
   selector: 'app-accommodation-edit',
@@ -100,13 +101,41 @@ export class AccommodationEditComponent implements OnInit {
     }
   }
 
-  onPhotosChange(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    const photos = value
-      .split(',')
-      .map(p => p.trim())
-      .filter(p => p.length > 0);
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
-    this.form.controls['photos'].setValue(photos);
+    const files = Array.from(input.files);
+
+    const uploadPromises = files.map(file => this.uploadToCloudinary(file));
+
+    Promise.all(uploadPromises)
+      .then(urls => {
+        // Append new URLs without deleting existing ones
+        const currentPhotos: string[] = this.form.controls['photos'].value || [];
+        this.form.controls['photos'].setValue([...currentPhotos, ...urls]);
+      })
+      .catch(err => console.error('Upload failed', err));
+  }
+
+  removePhoto(index: number) {
+    const currentPhotos: string[] = this.form.controls['photos'].value || [];
+    currentPhotos.splice(index, 1);
+    this.form.controls['photos'].setValue([...currentPhotos]);
+  }
+
+  private uploadToCloudinary(file: File): Promise<string> {
+    const url = `https://api.cloudinary.com/v1_1/${ApiConfig.cloudinaryCloudName}/image/upload`;
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', ApiConfig.cloudinaryUploadPresetName);
+    formData.append('folder', 'accommodations');
+
+    return fetch(url, {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => data.secure_url as string);
   }
 }
