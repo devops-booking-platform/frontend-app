@@ -4,6 +4,7 @@ import { SearchService } from '../../../core/services/search.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { tap, catchError } from 'rxjs';
 import { SnackbarNotificationService } from '../../../auth/services/snackbar-notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-accommodations-list',
@@ -34,7 +35,8 @@ export class AccommodationsListComponent {
 
   constructor(
     private searchService: SearchService,
-    private snackbar: SnackbarNotificationService
+    private snackbar: SnackbarNotificationService,
+    private router: Router
   ) { }
 
   private plusDays(days: number): string {
@@ -101,4 +103,7 @@ export class AccommodationsListComponent {
     return new Date(value).toISOString().split('T')[0];
   }
 
+  viewAccommodation(id: string) {
+    this.router.navigate(['/accommodations/view', id]);
+  }
 }

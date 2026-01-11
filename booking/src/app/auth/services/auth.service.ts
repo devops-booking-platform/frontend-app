@@ -9,8 +9,9 @@ import { LoginRequest } from '../../shared/models/login.model';
 export class AuthService {
     private readonly TOKEN_KEY = 'auth_token';
     private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
-
+    private currentRole = new BehaviorSubject<string>(this.role);
     isLoggedIn$ = this.isLoggedInSubject.asObservable();
+    currentRole$ = this.currentRole.asObservable();
     private readonly baseUrl = ApiConfig.userService;
     constructor(private http: HttpClient) { }
 
@@ -21,6 +22,11 @@ export class AuthService {
             .pipe(
                 tap(res => {
                     localStorage.setItem(this.TOKEN_KEY, res.token);
+                    const payload = JSON.parse(atob(res.token.split('.')[1]));
+                    const newRole =
+                        payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? null;
+
+                    this.currentRole.next(newRole);
                     this.isLoggedInSubject.next(true);
                 })
             );

@@ -12,12 +12,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AccommodationSearchViewComponent } from './accommodation-search-view/accommodation-search-view.component';
 
 @NgModule({
   declarations: [
     AccommodationsListComponent,
     MyAccommodationsComponent,
-    AccommodationEditComponent
+    AccommodationEditComponent,
+    AccommodationSearchViewComponent
   ],
   imports: [
     CommonModule,

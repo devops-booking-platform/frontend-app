@@ -97,7 +97,7 @@
                     </thead>
 
                     <tbody>
-                        <tr *ngFor="let r of results">
+                        <tr *ngFor="let r of results" (click)="viewAccommodation(r.accommodationId)">
                             <td>{{ r.name }}</td>
                             <td>{{ r.country }}</td>
                             <td>{{ r.city }}</td>

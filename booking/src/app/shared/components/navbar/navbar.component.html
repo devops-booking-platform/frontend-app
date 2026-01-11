@@ -15,7 +15,7 @@
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/accommodations">Accommodations</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="(role$ | async) === 'Host'">
                         <a class="nav-link" routerLink="/accommodations/my">My Accommodations</a>
                     </li>
                     <li class="nav-item">

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent {
   isLoggedIn$ = this.authService.isLoggedIn$;
+  role$ = this.authService.currentRole$;
 
   constructor(private authService: AuthService, private router: Router) { }
 
