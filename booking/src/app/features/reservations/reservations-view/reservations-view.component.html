@@ -85,7 +85,7 @@
                                 <span class="badge bg-secondary">{{ getStatusLabel(r.status) }}</span>
                             </td>
                             <td *ngIf="role === 'Host'">{{ r.totalPreviousCancellationsByGuest }}</td>
-                            <td *ngIf="getStatusLabel(r.status) === 'Approved' && role === 'Guest'">
+                            <td *ngIf="getStatusLabel(r.status) === 'Approved' && role === 'Guest' && r.startDate > today">
                                 <button class="btn btn-sm btn-danger" (click)="cancelReservation(r.id)">
                                     <i class="bi bi-x-circle"></i> Cancel
                                 </button>
