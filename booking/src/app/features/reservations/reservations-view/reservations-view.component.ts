@@ -3,6 +3,7 @@ import { ReservationService } from '../../../core/services/reservation.service';
 import { PagedResult } from '../../../shared/models/paged.model';
 import { GetReservationRequest, GetReservationResponse } from '../../../shared/models/reservations.model';
 import { SnackbarNotificationService } from '../../../auth/services/snackbar-notification.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-reservations-view',
@@ -27,11 +28,14 @@ export class ReservationsViewComponent implements OnInit {
   // Sorting
   sortColumn: keyof GetReservationResponse | '' = '';
   sortDirection: 'asc' | 'desc' = 'asc';
+  role = '';
 
-  constructor(private reservationService: ReservationService, private notificationService: SnackbarNotificationService) { }
+  constructor(private reservationService: ReservationService, private notificationService: SnackbarNotificationService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.getReservations();
+    this.authService.currentRole$
+      .subscribe(role => this.role = role);
   }
 
   applyFilters() {
@@ -85,6 +89,37 @@ export class ReservationsViewComponent implements OnInit {
         },
         error: (err) => {
           const errorMsg = err?.error?.detail || 'Failed to cancel reservation.';
+          this.notificationService.error(errorMsg);
+        }
+      });
+  }
+
+  acceptReservation(id: string): void {
+    this.reservationService.approveReservation(id)
+      .subscribe({
+        next: () => {
+          this.notificationService.success('Reservation approved successfully.');
+          this.getReservations();
+        },
+        error: (err) => {
+          const errorMsg = err?.error?.detail || 'Failed to approve reservation.';
+          this.notificationService.error(errorMsg);
+        }
+      });
+  }
+
+  declineReservation(id: string): void {
+    if (!confirm('Are you sure you want to decline this reservation?')) {
+      return;
+    }
+    this.reservationService.declineReservation(id)
+      .subscribe({
+        next: () => {
+          this.notificationService.success('Reservation declined successfully.');
+          this.getReservations();
+        },
+        error: (err) => {
+          const errorMsg = err?.error?.detail || 'Failed to decline reservation.';
           this.notificationService.error(errorMsg);
         }
       });

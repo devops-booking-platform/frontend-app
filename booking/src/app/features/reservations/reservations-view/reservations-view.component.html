@@ -80,10 +80,16 @@
                             <td>
                                 <span class="badge bg-secondary">{{ getStatusLabel(r.status) }}</span>
                             </td>
-                            <td
-                                *ngIf="getStatusLabel(r.status) === 'Approved'">
+                            <td *ngIf="getStatusLabel(r.status) === 'Approved' && role === 'Guest'">
                                 <button class="btn btn-sm btn-danger" (click)="cancelReservation(r.id)">
                                     <i class="bi bi-x-circle"></i> Cancel
+                                </button>
+                            </td>
+                            <td *ngIf="getStatusLabel(r.status) === 'Pending' && role === 'Host'">
+                                <button class="btn btn-sm btn-success" (click)="acceptReservation(r.id)">Accept
+                                </button>
+                            <td *ngIf="getStatusLabel(r.status) === 'Pending' && role === 'Host'">
+                                <button class="btn btn-sm btn-danger" (click)="declineReservation(r.id)">Decline
                                 </button>
                             </td>
                         </tr>

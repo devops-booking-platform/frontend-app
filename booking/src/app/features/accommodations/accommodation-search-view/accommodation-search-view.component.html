@@ -3,7 +3,7 @@
     <!-- Title & Reserve Button -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-bold">{{ accommodation?.name }}</h2>
-        <button class="btn btn-primary btn-lg" (click)="makeReservation()">
+        <button class="btn btn-primary btn-lg" (click)="makeReservation()" *ngIf=" isLoggedIn && role === 'Guest'">
             Make Reservation
         </button>
     </div>
