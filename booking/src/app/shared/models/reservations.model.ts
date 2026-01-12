@@ -31,6 +31,7 @@ export interface GetReservationResponse {
     status: 'Pending' | 'Approved' | 'Declined' | 'Cancelled';
     createdAt: string;   // ISO datetime
     totalPrice: number;
+    totalPreviousCancellationsByGuest: number;
 }
 
 export interface GetReservationRequest extends PagedRequest {
