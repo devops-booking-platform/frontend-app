@@ -4,6 +4,7 @@ import { PagedResult } from '../../../shared/models/paged.model';
 import { GetReservationRequest, GetReservationResponse } from '../../../shared/models/reservations.model';
 import { SnackbarNotificationService } from '../../../auth/services/snackbar-notification.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reservations-view',
@@ -29,8 +30,11 @@ export class ReservationsViewComponent implements OnInit {
   sortColumn: keyof GetReservationResponse | '' = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   role = '';
-
-  constructor(private reservationService: ReservationService, private notificationService: SnackbarNotificationService, private authService: AuthService) { }
+  today: string = new Date().toISOString().split('T')[0];
+  constructor(private reservationService: ReservationService,
+    private notificationService: SnackbarNotificationService,
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.getReservations();
@@ -123,5 +127,13 @@ export class ReservationsViewComponent implements OnInit {
           this.notificationService.error(errorMsg);
         }
       });
+  }
+
+  rate(reservation: GetReservationResponse, isHost: boolean = true): void {
+    if (isHost) {
+      this.router.navigate(['ratings/host'], { queryParams: { reservationId: reservation.id, hostId: reservation.hostId } });
+      return;
+    }
+    this.router.navigate(['ratings/accommodation'], { queryParams: { reservationId: reservation.id, accommodationId: reservation.accommodationId } });
   }
 }

@@ -68,6 +68,9 @@
                             <th>Status</th>
                             <th *ngIf="role === 'Host'">Previous cancellations</th>
                             <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
 
@@ -85,6 +88,16 @@
                             <td *ngIf="getStatusLabel(r.status) === 'Approved' && role === 'Guest'">
                                 <button class="btn btn-sm btn-danger" (click)="cancelReservation(r.id)">
                                     <i class="bi bi-x-circle"></i> Cancel
+                                </button>
+                            </td>
+                            <td *ngIf="role === 'Guest' && getStatusLabel(r.status) === 'Approved' && r.endDate <= today">
+                                <button class="btn btn-sm btn-success" (click)="rate(r)">
+                                    Rate host
+                                </button>
+                            </td>
+                            <td *ngIf="role === 'Guest' && getStatusLabel(r.status) === 'Approved' && r.endDate <= today">
+                                <button class="btn btn-sm btn-success" (click)="rate(r, false)">
+                                    Rate accommodation
                                 </button>
                             </td>
                             <td *ngIf="getStatusLabel(r.status) === 'Pending' && role === 'Host'">

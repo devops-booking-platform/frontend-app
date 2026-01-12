@@ -37,6 +37,13 @@ const routes: Routes = [
       import('./features/notifications/notifications.module')
         .then(m => m.NotificationsModule)
   },
+  {
+    path: 'ratings',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/ratings/ratings.module')
+        .then(m => m.RatingsModule)
+  },
   { path: '', redirectTo: 'accommodations', pathMatch: 'full' }
 ];
 
