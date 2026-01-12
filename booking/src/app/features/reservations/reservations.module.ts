@@ -10,11 +10,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from '../../shared/shared.module';
+import { ReservationsViewComponent } from './reservations-view/reservations-view.component';
 
 
 @NgModule({
   declarations: [
-    CreateReservationComponent
+    CreateReservationComponent,
+    ReservationsViewComponent
   ],
   imports: [
     CommonModule,

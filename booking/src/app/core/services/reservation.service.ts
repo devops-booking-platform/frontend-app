@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreateReservationRequest, ReservationResponse } from '../../shared/models/reservations.model';
+import { CreateReservationRequest, GetReservationRequest, GetReservationResponse, ReservationResponse } from '../../shared/models/reservations.model';
 import { ApiConfig } from '../api.config';
+import { PagedResult } from '../../shared/models/paged.model';
+
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
     private readonly baseUrl = ApiConfig.reservationService;
@@ -18,12 +20,18 @@ export class ReservationService {
         return this.http.post<void>(`${this.baseUrl}/reservations`, request, { headers });
     }
 
+    search(request: GetReservationRequest): Observable<PagedResult<GetReservationResponse>> {
+        const query = `${request.reservationStatus ? `status=${request.reservationStatus}&` : ''
+            }page=${request.page}&pageSize=${request.pageSize}`;
+        return this.http.get<PagedResult<GetReservationResponse>>(`${this.baseUrl}/reservations?${query}`);
+    }
+
     // Get approved reservations
     getApprovedReservations(): Observable<ReservationResponse[]> {
         return this.http.get<ReservationResponse[]>(`${this.baseUrl}/reservations/approved`);
     }
 
-     // Get pending reservations
+    // Get pending reservations
     getPendingReservations(): Observable<ReservationResponse[]> {
         return this.http.get<ReservationResponse[]>(`${this.baseUrl}/reservations/pending`);
     }
