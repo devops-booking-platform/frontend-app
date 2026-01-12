@@ -17,8 +17,8 @@ export enum NotificationType {
 
 export interface Notification {
     id: string;
-    type: NotificationType;
-    content: string;
+    notificationType: NotificationType;
+    message: string;
     read: boolean;
-    createdAt: string; // ISO date string
+    createdOn: string; // ISO date string
 }

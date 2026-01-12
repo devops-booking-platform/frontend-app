@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { NotificationType, MarkNotificationAsReadCommand, EnableDisableNotificationRequest } from '../../shared/models/notifications.model';
+import { NotificationType, MarkNotificationAsReadCommand, EnableDisableNotificationRequest, Notification } from '../../shared/models/notifications.model';
 import { ApiConfig } from '../api.config';
+import { PagedResult } from '../../shared/models/paged.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -16,14 +17,14 @@ export class NotificationService {
         notificationType?: NotificationType,
         page?: number,
         pageSize?: number
-    ): Observable<Notification[]> {
+    ): Observable<PagedResult<Notification>> {
         const params: any = {};
         if (read !== undefined) params.Read = read;
         if (notificationType !== undefined) params.NotificationType = notificationType;
         if (page !== undefined) params.Page = page;
         if (pageSize !== undefined) params.PageSize = pageSize;
 
-        return this.http.get<Notification[]>(`${this.baseUrl}/notification`, { params });
+        return this.http.get<PagedResult<Notification>>(`${this.baseUrl}/notification`, { params });
     }
 
     // Get unread notifications only

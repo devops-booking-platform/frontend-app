@@ -1,1 +1,23 @@
-<p>rate-host works!</p>
+<div class="container mt-4">
+    <h3 class="mb-3">Rate Host</h3>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="mb-3">
+            <label class="form-label">Rating (1–5)</label>
+            <input type="number" class="form-control" formControlName="rating" min="1" max="5">
+
+            <div class="text-danger mt-1" *ngIf="form.controls.rating.invalid && form.controls.rating.touched">
+                Rating is required.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Comment</label>
+            <textarea class="form-control" rows="3" formControlName="comment"></textarea>
+        </div>
+
+        <button class="btn btn-primary" type="submit" [disabled]="submitting">
+            Submit Rating
+        </button>
+    </form>
+</div>
