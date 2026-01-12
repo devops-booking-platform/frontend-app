@@ -3,6 +3,10 @@ th[role="button"] {
 }
 
 th i {
-    font-size: 0.9rem;
+    font-size: 20px;
     margin-left: 4px;
+}
+
+td {
+    font-size: 18px;
 }
