@@ -60,7 +60,7 @@ export class NotificationsViewComponent implements OnInit {
       case NotificationType.ReservationCreated: return 'bg-primary';
       case NotificationType.ReservationCanceled: return 'bg-danger';
       case NotificationType.ReservationResponded: return 'bg-success';
-      case NotificationType.HostRated: return 'bg-purple';
+      case NotificationType.HostRated: return 'bg-info';
       case NotificationType.AccommodationRated: return 'bg-warning';
       default: return 'bg-secondary';
     }

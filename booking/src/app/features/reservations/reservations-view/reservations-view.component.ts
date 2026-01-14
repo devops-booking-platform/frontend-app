@@ -131,9 +131,9 @@ export class ReservationsViewComponent implements OnInit {
 
   rate(reservation: GetReservationResponse, isHost: boolean = true): void {
     if (isHost) {
-      this.router.navigate(['ratings/host'], { queryParams: { reservationId: reservation.id, hostId: reservation.hostId } });
+      this.router.navigate(['ratings/host'], { queryParams: { hostId: reservation.hostId } });
       return;
     }
-    this.router.navigate(['ratings/accommodation'], { queryParams: { reservationId: reservation.id, accommodationId: reservation.accommodationId } });
+    this.router.navigate(['ratings/accommodation'], { queryParams: { accommodationId: reservation.accommodationId } });
   }
 }

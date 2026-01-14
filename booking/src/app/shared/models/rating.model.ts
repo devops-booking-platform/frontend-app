@@ -5,6 +5,18 @@ export interface AccommodationRatingRequest {
     comment?: string | null;
 }
 
+export interface RatingResponse {
+    id: string;
+    rating: number;
+    comment?: string;
+    guestFullName?: string;
+    createdAt: string; // ISO date string
+    lastChangedAt: string; // ISO date string
+    guestId: string;
+    hostId?: string;
+    accommodationId?: string;
+}
+
 export interface HostRatingRequest {
     id?: string | null;
     hostId: string;
