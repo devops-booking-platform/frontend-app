@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ProfileComponent } from './profile/profile.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: 'profile', component: ProfileComponent },
+  { path: 'password', component: ChangePasswordComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

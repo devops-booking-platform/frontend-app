@@ -1,0 +1,16 @@
+.accommodation-card {
+    border-radius: 12px;
+    transition: transform 0.15s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-4px);
+    }
+}
+
+.accommodation-photo {
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}

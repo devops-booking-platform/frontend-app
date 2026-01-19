@@ -1,0 +1,56 @@
+<div class="container mt-4">
+    <h2 class="mb-3">Reserve: {{ accommodation?.name }} ({{ accommodation?.minimumNumberOfGuests }} - {{
+        accommodation?.maximumNumberOfGuests }} guests)</h2>
+
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Availability Overview</div>
+        <div class="card-body">
+            <table class="table table-bordered table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Price per {{ accommodation?.priceType === 0 ? 'Guest' : 'Unit'}} (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let a of availabilities">
+                        <td>{{ a.startDate }}</td>
+                        <td>{{ a.endDate }}</td>
+                        <td>{{ a.price }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- RESERVATION FORM -->
+    <div class="card">
+        <div class="card-header fw-bold">Make a Reservation</div>
+
+        <div class="card-body">
+            <form [formGroup]="reservationForm" (ngSubmit)="submit()">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control" formControlName="startDate">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control" formControlName="endDate">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Guests</label>
+                        <input type="number" class="form-control" formControlName="guests" min="1">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3" [disabled]="reservationForm.invalid">
+                    Submit Reservation
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NotificationListenerService } from './core/services/notification-listener.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'booking';
+
+  constructor(private notificationListenerService: NotificationListenerService) { }
 }
+
