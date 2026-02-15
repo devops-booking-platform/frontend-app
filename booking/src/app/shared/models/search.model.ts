@@ -20,4 +20,5 @@ export interface SearchResult {
     maxGuests: number;
     imageUrl?: string;
     priceType: PriceType;
+    price: number;
 }
