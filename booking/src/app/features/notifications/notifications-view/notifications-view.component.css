@@ -1,0 +1,12 @@
+.badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.6em;
+}
+
+table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+button.btn-sm {
+    padding: 0.25rem 0.5rem;
+}
